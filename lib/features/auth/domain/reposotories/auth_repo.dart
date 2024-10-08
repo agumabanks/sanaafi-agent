@@ -36,7 +36,7 @@ Future<Response> clientguarantorsList(int id) async {
   //  }
 
 
-// get clieent
+// get client
   Future<Response> getClientProfile(int id) {
     return apiClient.postData(AppConstants.getClientsProfile, {"id": id});
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:six_cash/features/a_field_office/clients/controllers/AddClientController.dart';
+// import 'package:six_cash/features/a_field_office/clients/controllers/add_client_controller.dart';
 
 class AddClientScreen extends StatelessWidget {
   final AddClientController addClientController = Get.put(AddClientController());
@@ -9,7 +10,7 @@ class AddClientScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add Client'),
+        title: const Text('Add Client'),
       ),
       body: GetBuilder<AddClientController>(
         builder: (controller) {
@@ -21,10 +22,11 @@ class AddClientScreen extends StatelessWidget {
                   key: controller.formKey,
                   child: SingleChildScrollView(
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         TextFormField(
                           controller: controller.nameController,
-                          decoration: InputDecoration(labelText: 'Name'),
+                          decoration: const InputDecoration(labelText: 'Name'),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Please enter a name';
@@ -32,9 +34,10 @@ class AddClientScreen extends StatelessWidget {
                             return null;
                           },
                         ),
+                        const SizedBox(height: 10),
                         TextFormField(
                           controller: controller.phoneController,
-                          decoration: InputDecoration(labelText: 'Phone'),
+                          decoration: const InputDecoration(labelText: 'Phone'),
                           keyboardType: TextInputType.phone,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -43,41 +46,47 @@ class AddClientScreen extends StatelessWidget {
                             return null;
                           },
                         ),
+                        const SizedBox(height: 10),
                         TextFormField(
                           controller: controller.addressController,
-                          decoration: InputDecoration(labelText: 'Address'),
+                          decoration: const InputDecoration(labelText: 'Address'),
                         ),
+                        const SizedBox(height: 10),
                         TextFormField(
                           controller: controller.dobController,
-                          decoration: InputDecoration(labelText: 'Date of Birth'),
+                          decoration: const InputDecoration(labelText: 'Date of Birth'),
                           keyboardType: TextInputType.datetime,
                         ),
+                        const SizedBox(height: 10),
                         TextFormField(
                           controller: controller.businessController,
-                          decoration: InputDecoration(labelText: 'Business'),
+                          decoration: const InputDecoration(labelText: 'Business'),
                         ),
+                        const SizedBox(height: 10),
                         TextFormField(
                           controller: controller.ninController,
-                          decoration: InputDecoration(labelText: 'NIN'),
+                          decoration: const InputDecoration(labelText: 'NIN'),
                         ),
+                        const SizedBox(height: 10),
                         TextFormField(
                           controller: controller.creditBalanceController,
-                          decoration: InputDecoration(labelText: 'Credit Balance'),
+                          decoration: const InputDecoration(labelText: 'Credit Balance'),
                           keyboardType: TextInputType.number,
                         ),
+                        const SizedBox(height: 10),
                         TextFormField(
                           controller: controller.savingsBalanceController,
-                          decoration: InputDecoration(labelText: 'Savings Balance'),
+                          decoration: const InputDecoration(labelText: 'Savings Balance'),
                           keyboardType: TextInputType.number,
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         ElevatedButton(
                           onPressed: () {
                             if (controller.formKey.currentState!.validate()) {
                               controller.addClient();
                             }
                           },
-                          child: Text('Add Client'),
+                          child: const Text('Add Client'),
                         ),
                       ],
                     ),
@@ -88,7 +97,7 @@ class AddClientScreen extends StatelessWidget {
                 Positioned.fill(
                   child: Container(
                     color: Colors.black.withOpacity(0.5),
-                    child: Center(
+                    child: const Center(
                       child: CircularProgressIndicator(),
                     ),
                   ),

@@ -84,7 +84,8 @@ class ApiClient extends GetxService {
       String uri, dynamic body, {Map<String, String>? headers}) async {
     if(await ApiChecker.isVpnActive()) {
       return const Response(statusCode: -1, statusText: 'you are using vpn');
-    }{
+    }
+    {
       try {
         debugPrint('====> GetX Base URL: $appBaseUrl');
         debugPrint('====> GetX Call: $uri');

@@ -1,4 +1,5 @@
 import 'package:six_cash/features/a_field_office/home/screens/fo-home.dart';
+import 'package:six_cash/features/a_field_office/transactions/screens/LoanTransactionView.dart';
 import 'package:six_cash/features/history/screens/history_screen.dart';
 import 'package:six_cash/features/home/screens/home_screen.dart';
 import 'package:six_cash/features/notification/screens/notification_screen.dart';
@@ -17,7 +18,7 @@ class MenuItemController extends GetxController implements GetxService{
   final List<Widget> screen = [
     OFHomePage(),
     ClientsPage(),
-    HistoryScreen(),
+    LoanTransactionView(),
     // const NotificationScreen(),
     const ProfileScreen()
   ];

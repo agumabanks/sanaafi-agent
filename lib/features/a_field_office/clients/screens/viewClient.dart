@@ -72,12 +72,7 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
             leading: Row(
   mainAxisSize: MainAxisSize.min, // Prevents the row from taking up the whole app bar width
   children: [
-    // IconButton(
-    //   icon: Icon(Icons.arrow_back),
-    //   onPressed: () {
-    //     Navigator.of(context).pop();
-    //   },
-    // ),
+     
     IconButton(
       icon: Icon(Icons.home),
       onPressed: () {
@@ -184,7 +179,7 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
                                                                 child: CustomImageWidget(
                                                                   fit: BoxFit.cover,
                                                                   // https://finmicro.sanaa.co/storage/app/public/clients/photos/WswWAGeAnVbHtQy8eoSoTT4eVEwoC5Xn9Wmpperp.jpg
-                                                                  image: "https://finmicro.sanaa.co/storage/app/public/${controller.clientProfile!.content!.first.client_photo}",
+                                                                  image: "http://maslink.sanaa.co/storage/app/public/${controller.clientProfile!.content!.first.client_photo}",
                                                                   placeholder: Images.avatar,
                                                                 ),
                                                               ),

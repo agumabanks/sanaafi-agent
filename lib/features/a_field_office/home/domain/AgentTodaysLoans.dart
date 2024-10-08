@@ -40,6 +40,7 @@ class DataContent {
     String? clientName;
     String? clientPhone;
     String? installAmount;
+    String? balance;
     DateTime? date;
     String? status;
     DateTime? createdAt;
@@ -53,6 +54,7 @@ class DataContent {
         this.clientName,
         this.clientPhone,
         this.installAmount,
+        this.balance,
         this.date,
         this.status,
         this.createdAt,
@@ -67,6 +69,7 @@ class DataContent {
         clientName: json["client_name"],
         clientPhone: json["client_phone"],
         installAmount: json["install_amount"],
+        balance:json["balance"],
         date: json["date"] == null ? null : DateTime.parse(json["date"]),
         status: json["status"],
         createdAt: json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
@@ -81,6 +84,7 @@ class DataContent {
         "client_name": clientName,
         "client_phone": clientPhone,
         "install_amount": installAmount,
+        "balance":balance,
         "date": "${date!.year.toString().padLeft(4, '0')}-${date!.month.toString().padLeft(2, '0')}-${date!.day.toString().padLeft(2, '0')}",
         "status": status,
         "created_at": createdAt?.toIso8601String(),

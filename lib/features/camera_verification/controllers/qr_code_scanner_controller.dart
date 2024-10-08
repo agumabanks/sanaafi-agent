@@ -121,7 +121,9 @@ class _TransactionSelectState extends State<TransactionSelect> {
               ),
             ),
             SizedBox(height: 16),
-            TextButton(
+             authController.isLoading2 
+              ? Center(child: CircularProgressIndicator()) 
+              :   TextButton(
               onPressed: () {
                 if (_amountController.text.isNotEmpty) {
                   int amount = int.parse(_amountController.text);

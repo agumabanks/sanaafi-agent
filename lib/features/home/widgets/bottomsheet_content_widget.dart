@@ -73,18 +73,21 @@ class _BottomSheetContentWidgetState extends State<BottomSheetContentWidget> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Name'),
-                  SizedBox(width: 16),
-                  Text('Phone'),
-                  SizedBox(width: 16),
-                  Text('Amount'),
-                  SizedBox(width: 16),
-                  Icon(Icons.check_circle),
-                ],
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Name'),
+                    SizedBox(width: 16),
+                    Text('Phone'),
+                    SizedBox(width: 16),
+                    Text('Amount'),
+                    SizedBox(width: 16),
+                    Icon(Icons.check_circle),
+                  ],
+                ),
               ),
               const Divider(), // Add a divider between header and content
               authController.agentTodaySche == null
@@ -102,12 +105,22 @@ class _BottomSheetContentWidgetState extends State<BottomSheetContentWidget> {
                                 return Padding(
                                   padding:const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeExtraSmall),
                                   child: Column(
+                                    // mainAxisAlignment: MainAxisAlignment.center,
+                                    // crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
                                       Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Expanded(child: Text(loan.clientName ?? 'N/A')),
+                                          Expanded(child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(loan.clientName ?? 'N/A'),
+                                              FormattedLoanAmount(amount:loan.balance)
+                                               
+                                            ],
+                                          )),
                                           const SizedBox(width: 16),
                                           Expanded(child: Text(loan.clientPhone ?? 'N/A')),
                                           const SizedBox(width: 16),

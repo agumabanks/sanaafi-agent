@@ -50,16 +50,26 @@ import 'package:six_cash/common/models/language_model.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:get/get.dart';
-import 'package:unique_identifier/unique_identifier.dart';
+import 'package:uuid/uuid.dart';
+// import 'package:unique_identifier/unique_identifier.dart';
 
 import '../features/kyc_verification/domain/reposotories/kyc_verify_repo.dart';
+import 'package:mobile_device_identifier/mobile_device_identifier.dart';
+import 'package:mobile_device_identifier/mobile_device_identifier.dart';
+
+import 'package:device_uuid/device_uuid.dart';
 
 
 Future<Map<String, Map<String, String>>> init() async {
   // Core
   final sharedPreferences = await SharedPreferences.getInstance();
   final BaseDeviceInfo deviceInfo =  await DeviceInfoPlugin().deviceInfo;
-  String? uniqueId = await  UniqueIdentifier.serial ?? '';
+   String? uniqueId =   Uuid().toString() ;
+
+  // final uuid = DeviceUuid().getUUID();
+  // final deviceIdentifier = await DeviceIdentifier.id;
+  // final _mobileDeviceIdentifier = MobileDeviceIdentifier().getDeviceId();
+
 
   Get.lazyPut(() => uniqueId);
   Get.lazyPut(() => sharedPreferences);

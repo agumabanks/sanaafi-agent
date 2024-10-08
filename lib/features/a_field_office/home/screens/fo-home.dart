@@ -19,21 +19,47 @@ class OFHomePage extends StatefulWidget {
 }
 
 class _OFHomePageState extends State<OFHomePage> {
-  
+  Timer? _timer; // Timer for periodic data refresh
+
+  @override
   void initState() {
     super.initState();
-    _reloadData( context);
-    
+    _reloadData(context); // Initial data load
+
+    // Initialize periodic data refresh every 30 seconds
+    _timer = Timer.periodic(Duration(seconds: 20), (Timer t) => _reloadData(context));
   }
-  
+
+  @override
+  void dispose() {
+    _timer?.cancel(); // Cancel the timer to prevent memory leaks
+    super.dispose();
+  }
+
   Future<void> _reloadData(BuildContext context) async {
+    final AuthController authController = Get.find<AuthController>();
+    await authController.getAgentLoanAmount();
+    await authController.getTodayScheduledLoans();
+    await authController.getClients();
+  }
+
+  //   Timer? _timer; // Timer for periodic data refresh
+
+  // void initState() {
+  //   super.initState();
+  //   _reloadData( context);
+  //       _timer = Timer.periodic(Duration(seconds: 30), (Timer t) => _reloadData(context));
+
+  // }
+  
+  // Future<void> _reloadData(BuildContext context) async {
     
-    Get.find<AuthController>().getAgentLoanAmount();
-    Get.find<AuthController>().getTodayScheduledLoans();
-       Get.find<AuthController>().getClients();
+  //   Get.find<AuthController>().getAgentLoanAmount();
+  //   Get.find<AuthController>().getTodayScheduledLoans();
+  //      Get.find<AuthController>().getClients();
 
     
-  }
+  // }
   @override
   Widget build(BuildContext context) {
     // final OFHomeController homeController = Get.find();
