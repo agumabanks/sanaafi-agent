@@ -3,11 +3,13 @@ import 'package:get/get.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:six_cash/features/a_field_office/clients/controllers/AddGuarantorController.dart';
 import 'package:six_cash/features/a_field_office/clients/controllers/clientController.dart';
+import 'package:six_cash/features/a_field_office/clients/screens/PaidClientsPage.dart';
 import 'package:six_cash/features/a_field_office/clients/screens/addClient.dart';
 import 'package:six_cash/features/a_field_office/clients/screens/allClients.dart';
 import 'package:six_cash/features/a_field_office/clients/screens/paidClients.dart';
 import 'package:six_cash/features/a_field_office/clients/screens/pendingClients.dart';
 import 'package:six_cash/features/a_field_office/clients/screens/runningClients.dart';
+import 'package:six_cash/features/a_field_office/clients/screens/unpaidToday.dart';
 import 'package:six_cash/features/a_field_office/clients/screens/viewClient.dart';
 import 'package:six_cash/features/a_field_office/search/screens/searchScreen.dart';
 // import 'package:six_cash/features/a_field_office/loans/controllers/LoanController.dart';
@@ -94,8 +96,8 @@ class _ClientsPageState extends State<ClientsPage> {
                           ),
                         ],
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                      child: const Padding(
+                        padding: EdgeInsets.all(8.0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -173,7 +175,106 @@ class _ClientsPageState extends State<ClientsPage> {
                         ),
                       ),
                     ),
-          
+
+
+        //  Unpaid Clients
+          GestureDetector(
+                    onTap: () {
+            // Handle navigation to detailed view of the selected category
+                        Get.to(UnPaidClients());
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Container(
+                          height: 70, width: Get.width,
+                          decoration:  BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(4),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 1,
+                                blurRadius: 1,
+                                offset: const Offset(0, 1), // changes position of shadow
+                              ),
+                            ],
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Unpaid Loans Today",
+                                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      '',
+                                      style: TextStyle(fontSize: 18),
+                                    ),
+                                    Icon(
+                                      Icons.arrow_forward_ios,
+                                      size: 16,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),  
+//  Unpaid Clients
+          GestureDetector(
+                    onTap: () {
+            // Handle navigation to detailed view of the selected category
+                        Get.to(PaidClientsPage());
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Container(
+                          height: 70, width: Get.width,
+                          decoration:  BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(4),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 1,
+                                blurRadius: 1,
+                                offset: const Offset(0, 1), // changes position of shadow
+                              ),
+                            ],
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Paid Loans Today",
+                                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      '',
+                                      style: TextStyle(fontSize: 18),
+                                    ),
+                                    Icon(
+                                      Icons.arrow_forward_ios,
+                                      size: 16,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),  
 
           //  Paid Clients
           GestureDetector(
@@ -203,7 +304,7 @@ class _ClientsPageState extends State<ClientsPage> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  "Paid loans",
+                                  "Completed loans",
                                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                                 ),
                                 Row(

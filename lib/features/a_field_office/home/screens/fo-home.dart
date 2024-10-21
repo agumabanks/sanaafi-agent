@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:expandable_bottom_sheet/expandable_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:six_cash/features/a_field_office/LoanCalculator/screens/LoanCalculatorPage.dart';
 import 'package:six_cash/features/a_field_office/clients/screens/addClient.dart';
 import 'package:six_cash/features/auth/controllers/auth_controller.dart';
 import 'package:six_cash/features/camera_verification/screens/camera_screen.dart';
@@ -141,6 +142,7 @@ class _OFHomePageState extends State<OFHomePage> {
                                     const SizedBox(height: 6),
                                     payCollection(),
                                     const SizedBox(height: 18),
+                                    LoanCalculatorPage()
                                     
                                     
                                   ],

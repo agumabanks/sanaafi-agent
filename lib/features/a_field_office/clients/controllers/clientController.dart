@@ -277,16 +277,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:six_cash/common/models/signup_body_model.dart';
 import 'package:six_cash/data/api/api_checker.dart';
 import 'package:six_cash/data/api/api_client.dart';
+import 'package:six_cash/features/a_field_office/clients/domain/PaidClientsToday%20.dart';
 import 'package:six_cash/features/a_field_office/clients/domain/client.dart';
 import 'package:six_cash/features/a_field_office/clients/domain/clientsLoansPage.dart';
 import 'package:six_cash/features/a_field_office/clients/domain/clientsLoansPagePending.dart';
 import 'package:six_cash/features/a_field_office/clients/domain/clientsLoansPageRunning.dart';
 import 'package:six_cash/features/a_field_office/clients/domain/clientsLoansPaidClients.dart';
 import 'package:six_cash/features/a_field_office/clients/domain/searchClientsLoansPage%20copy.dart';
-// import 'package:six_cash/features/a_field_office/clients/domain/clients_loans_page.dart';
-// import 'package:six_cash/features/a_field_office/clients/domain/clients_loans_page_pending.dart';
-// import 'package:six_cash/features/a_field_office/clients/domain/clients_loans_page_paid.dart';
-// import 'package:six_cash/features/a_field_office/clients/domain/search_clients_loans_page.dart';
+import 'package:six_cash/features/a_field_office/clients/domain/unpaidCleantModel.dart'; 
 import 'package:six_cash/features/auth/domain/models/user_short_data_model.dart';
 import 'package:six_cash/features/camera_verification/controllers/camera_screen_controller.dart';
 import 'package:six_cash/helper/custom_snackbar_helper.dart';
@@ -307,6 +305,16 @@ class ClientController extends GetxController implements GetxService {
   bool _isBiometricSupported = false;
   List<BiometricType> _bioList = [];
 
+
+  var isFetchingPaidTodayNextPage = false.obs;
+  var clientsListPaidToday = <DatumPaid>[].obs;
+  var currentPaidTodayPage = 1;
+  var totalPaidTodayPages = 1;
+
+
+
+
+
   List<BiometricType> get bioList => _bioList;
   bool get isLoading => _isLoading;
   bool get isVerifying => _isVerifying;
@@ -320,7 +328,14 @@ class ClientController extends GetxController implements GetxService {
   var clientsListPending = <ClientsDatumPending>[].obs;
   var totalClientsPending = 0.obs;
 
-  
+  var isLoadingUnpaidClientsToday = true.obs;
+  var unpaidClientsTodayList = <UPDatum>[].obs;
+  var totalUnpaidClientsToday = 0.obs;
+
+  var clientsListUnpaid = <UPDatum>[].obs;
+  var currentPage = 1.obs;
+  var totalPages = 1.obs;
+  var isFetchingNextPage = false.obs;
 
   var clientsListPaid = <ClientsDatumPaid>[].obs;
   var totalClientsPaid = 0.obs;
@@ -347,6 +362,8 @@ class ClientController extends GetxController implements GetxService {
     fetchClientsWithPendingLoans(addedBy);
     fetchClientsWithPaidLoans(addedBy);
     fetchTotalClients(addedBy);
+    fetchClientsWithUnpaidLoansToday();
+    fetchClientsWhoPaidToday();
   }
 
   @override
@@ -362,7 +379,125 @@ class ClientController extends GetxController implements GetxService {
     totalClientsPending.value = 0;
     clientsListPaid.clear();
     totalClientsPaid.value = 0;
+    unpaidClientsTodayList.clear();
+    clientsListPaidToday.clear();
   }
+
+Future<void> fetchClientsWhoPaidToday({bool isNextPage = false}) async {
+    if (isNextPage) {
+      if (isFetchingPaidTodayNextPage.value || currentPaidTodayPage >= totalPaidTodayPages) return;
+      isFetchingPaidTodayNextPage(true);
+      currentPaidTodayPage++;
+    } else {
+      isLoadingData(true);
+      currentPaidTodayPage = 1;
+      clientsListPaidToday.clear();
+    }
+
+    final response = await http.get(
+      Uri.parse('https://maslink.sanaa.co/api/v1/getClientsWhoPaidToday?per_page=20&page=$currentPaidTodayPage'),
+    );
+
+    if (response.statusCode == 200) {
+      var jsonData = json.decode(response.body);
+      var clientsData = ClientsWithpaidLoan.fromJson(jsonData);
+      if (isNextPage) {
+        clientsListPaidToday.addAll(clientsData.data!);
+      } else {
+        clientsListPaidToday.value = clientsData.data!;
+      }
+      totalPaidTodayPages = clientsData.lastPage ?? 1;
+    } else {
+      Get.snackbar(
+        'Error',
+        'Failed to load clients who paid today',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red.withOpacity(0.7),
+        colorText: Colors.white,
+        margin: const EdgeInsets.all(10),
+        borderRadius: 8,
+        duration: const Duration(seconds: 3),
+      );
+    }
+
+    isLoadingData(false);
+    isFetchingPaidTodayNextPage(false);
+  }
+
+// Fetch clients who haven't paid today
+Future<void> fetchClientsWithUnpaidLoansToday({bool isNextPage = false}) async {
+    if (isNextPage) {
+      // If it's the next page and we are already fetching, return early
+      if (isFetchingNextPage.value) return;
+
+      // Increment page number
+      currentPage.value += 1;
+
+      // If we have already fetched all pages, return early
+      if (currentPage.value > totalPages.value) return;
+
+      isFetchingNextPage(true);
+    } else {
+      // Reset for the initial fetch
+      isLoadingData(true);
+      currentPage.value = 1;
+      clientsListUnpaid.clear();
+    }
+
+    try {
+      final response = await http.get(
+        Uri.parse('http://maslink.sanaa.co/api/v1/unpaidclients?page=${currentPage.value}&per_page=20'),
+      );
+
+      if (response.statusCode == 200) {
+        var jsonResponse = json.decode(response.body);
+        var dataModel = ClientsWithUnpaidLoan.fromJson(jsonResponse);
+
+        if (dataModel.data != null) {
+          clientsListUnpaid.addAll(dataModel.data!);
+          totalPages.value = dataModel.lastPage ?? 1;
+        }
+      } else {
+        Get.snackbar(
+          'Error',
+          'Failed to fetch unpaid clients. Status Code: ${response.statusCode}',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red.withOpacity(0.7),
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(10),
+          borderRadius: 8,
+          duration: const Duration(seconds: 3),
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'An error occurred: $e',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red.withOpacity(0.7),
+        colorText: Colors.white,
+        margin: const EdgeInsets.all(10),
+        borderRadius: 8,
+        duration: const Duration(seconds: 3),
+      );
+    } finally {
+      isLoadingData(false);
+      isFetchingNextPage(false);
+    }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
 // ClientsLoansPageRunning
   var clientsListRunning = <ClientsDatumRunning>[].obs;
   var totalClientsRunning = 0.obs;
@@ -452,6 +587,18 @@ class ClientController extends GetxController implements GetxService {
     } finally {
       isSearchLoadingData(false);  // Set loading state to false
     }
+  }
+
+  
+  // Fetch clients with unpaid loans
+  Future<void> fetchClientsWithUnPaidLoans(int agentId) async {
+    await _fetchClientData(
+      agentId: agentId,
+      url:'http://maslink.sanaa.co/api/v1/agents/$agentId/clients-with-paid-loans',
+      onDataSuccess:(data) => clientsListPaid.value = ClientsLoansPagePaid.fromJson(data).data ?? [],
+      onTotalSuccess:  (data) => totalClientsPaid.value = ClientsLoansPagePaid.fromJson(data).totalClients ?? 0, 
+      
+    );
   }
 
   // Fetch clients with pending loans

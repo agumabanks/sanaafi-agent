@@ -346,24 +346,59 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
                                           ),
                                         ],
                                       ),
-                                      Container(
-                                        width: Get.width / 2 - 50,
-                                        decoration: BoxDecoration(
-                                          color: Colors.green[300],
-                                          borderRadius: BorderRadius.circular(4),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.grey.withOpacity(0.5),
-                                              spreadRadius: 1,
-                                              blurRadius: 1,
-                                              offset: const Offset(0, 1), // changes position of shadow
+                                      Column(
+                                        children: [
+                                          Container(
+                                            width: Get.width / 2 - 50,
+                                            decoration: BoxDecoration(
+                                              color: Colors.green[300],
+                                              borderRadius: BorderRadius.circular(4),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.grey.withOpacity(0.5),
+                                                  spreadRadius: 1,
+                                                  blurRadius: 1,
+                                                  offset: const Offset(0, 1), // changes position of shadow
+                                                ),
+                                              ],
                                             ),
-                                          ],
-                                        ),
-                                        child: CustomButtonWidget(buttonText: 'New Loan'.tr, onTap: (){
-                                          Get.find<ClientLoanController>().fetchLoanOffers();
-                                           Get.to(LoanApplicationPage(clientId: controller.clientProfile!.content!.first.id!,));
-                                        }),
+                                            child: CustomButtonWidget(buttonText: 'Pay Loan'.tr, onTap: (){
+                                              // showPayLoanDialog();
+                                              Get.defaultDialog(
+                                                        title: "Pay Loan",
+                                                        content: TransactionSelect(clientId: '${controller.clientProfile!.content!.first.id}', clientName: '${controller.clientProfile!.content!.first.name}'),
+                                                        // textConfirm: "Pay",
+                                                        // textCancel: "Cancel",
+                                                        // confirmTextColor: Colors.white,
+                                                        
+                                                        
+                                                      );
+                                              // Get.find<ClientLoanController>().fetchLoanOffers();
+                                              //  Get.to(LoanApplicationPage(clientId: controller.clientProfile!.content!.first.id!,));
+                                            }),
+                                          ),
+                                          SizedBox(height:10),
+
+                                           Container(
+                                            width: Get.width / 2 - 50,
+                                            decoration: BoxDecoration(
+                                              color: const Color.fromARGB(255, 0, 0, 0),
+                                              borderRadius: BorderRadius.circular(4),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.grey.withOpacity(0.5),
+                                                  spreadRadius: 1,
+                                                  blurRadius: 1,
+                                                  offset: const Offset(0, 1), // changes position of shadow
+                                                ),
+                                              ],
+                                            ),
+                                            child: CustomButtonWidget(buttonText: 'New Loan'.tr, onTap: (){
+                                              Get.find<ClientLoanController>().fetchLoanOffers();
+                                               Get.to(LoanApplicationPage(clientId: controller.clientProfile!.content!.first.id!,));
+                                            }),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
@@ -610,4 +645,82 @@ Widget clientLoanPaymentHistory() {
   );
 }
 
+  // Method to show the custom dialog
+  void showPayLoanDialog() {
+    // Get.defaultDialog(
+    //   title: "Pay Loan",
+    //   content: TransactionSelect(clientId: _clientId, clientName: _name),
+    //   textConfirm: "Pay",
+    //   textCancel: "Cancel",
+    //   confirmTextColor: Colors.white,
+      
+       
+    // );
+  }
+
+   
+
 }
+
+
+class TransactionSelect extends StatefulWidget {
+  final String? clientId;
+  final String? clientName;
+
+  const TransactionSelect({Key? key, this.clientId, this.clientName}) : super(key: key);
+
+  @override
+  _TransactionSelectState createState() => _TransactionSelectState();
+}
+
+class _TransactionSelectState extends State<TransactionSelect> {
+  final TextEditingController _amountController = TextEditingController();
+
+  @override
+  void dispose() {
+    _amountController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GetBuilder<AuthController>(
+      builder: (authController) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (widget.clientName != null) Text(widget.clientName!),
+            ListTile(
+              title: Text('Pay Loan'.tr),
+              onTap: () {
+                // Add action if needed
+              },
+            ),
+            TextField(
+              controller: _amountController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                labelText: 'Enter amount',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 16),
+             authController.isLoading2 
+              ? Center(child: CircularProgressIndicator()) 
+              :   TextButton(
+              onPressed: () {
+                if (_amountController.text.isNotEmpty) {
+                  int amount = int.parse(_amountController.text);
+                  int clientId = int.parse(widget.clientId!);
+                  authController.payLoan(clientId, amount);
+                } else {
+                  print('Amount is empty');
+                }
+              },
+              child: Text('Pay Now'),
+            ),
+          ],
+        );
+      },
+    );
+  }}
