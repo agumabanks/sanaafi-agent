@@ -56,7 +56,7 @@ Future<Response> todayScheduledLoans(int id) {
     return apiClient.postData(AppConstants.payLoan, {"client_id": client_id, "amount": amount, "agent_id": agentid});
   }
 
-  // getclientData https://finmicro.sanaa.co/api/v1/getClientQr?client_id=59
+  // getclientData https://kansanga.sanaa.co/api/v1/getClientQr?client_id=59
    Future<Response> getclientData(int client_id, ) {
     return apiClient.postData(AppConstants.getClientQr, {"client_id": client_id});
   }
