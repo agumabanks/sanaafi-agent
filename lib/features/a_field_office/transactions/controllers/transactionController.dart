@@ -27,7 +27,7 @@ class LoanTransactionController extends GetxController {
       var agentId = savedCustomerData['id'];
 
       isLoading(true);
-      final response = await http.get(Uri.parse('https://kansanga.sanaa.co/api/v1/agent/$agentId/loan-transactions'));
+      final response = await http.get(Uri.parse('https://bafubira.sanaa.co/api/v1/agent/$agentId/loan-transactions'));
 
       if (response.statusCode == 200) {
         var jsonResponse = json.decode(response.body);

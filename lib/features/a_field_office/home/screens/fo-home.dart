@@ -285,74 +285,76 @@ Widget LoanAmount() {
   Widget payCollection(){
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Column(
-        children: [
-          Row(
-            // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              InkWell(
-                onTap: () {
-                  Get.to(()=> const CameraScreen(
-                    fromEditProfile: false, isBarCodeScan: true, isHome: true,
-                  ));
-                },
-                child: Container(
-                  height: 150, width: Get.width /2 -20,
-                  // color: Colors.green,
-                  decoration: BoxDecoration(
-                    color: Colors.green,
-                    borderRadius: BorderRadius.circular(4),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 1,
-                        blurRadius: 1,
-                        offset: const Offset(0, 1), // changes position of shadow
-                      ),
-                    ],
-                  ),
-                  child:  const Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Icon(Icons.qr_code, color: Color.fromARGB(255, 235, 235, 235), size: 30,),
-                        
-                        Text('Pay Loan',style: TextStyle(color: Color.fromARGB(255, 235, 235, 235)),),
+      child: Center(
+        child: Column(
+          children: [
+            Row(
+              // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                InkWell(
+                  onTap: () {
+                    Get.to(()=> const CameraScreen(
+                      fromEditProfile: false, isBarCodeScan: true, isHome: true,
+                    ));
+                  },
+                  child: Container(
+                    height: 150, width: Get.width * 0.9,
+                    // color: Colors.green,
+                    decoration: BoxDecoration(
+                      color: Colors.green,
+                      borderRadius: BorderRadius.circular(4),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 1,
+                          blurRadius: 1,
+                          offset: const Offset(0, 1), // changes position of shadow
+                        ),
                       ],
                     ),
+                    child:  const Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(Icons.qr_code, color: Color.fromARGB(255, 235, 235, 235), size: 30,),
+                          
+                          Text('Pay Loan',style: TextStyle(color: Color.fromARGB(255, 235, 235, 235)),),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(width: 16),
-              
-              Container(
-                height: 150, width: Get.width /2 -30,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(4),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 1,
-                      blurRadius: 1,
-                      offset: const Offset(0, 1), // changes position of shadow
-                    ),
-                  ],
-                ),
-                child: const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Icon(Icons.add),
-                    Text('Add Savings'),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ],
+                // const SizedBox(width: 16),
+                
+                // Container(
+                //   height: 150, width: Get.width /2 -30,
+                //   decoration: BoxDecoration(
+                //     color: Colors.white,
+                //     borderRadius: BorderRadius.circular(4),
+                //     boxShadow: [
+                //       BoxShadow(
+                //         color: Colors.grey.withOpacity(0.5),
+                //         spreadRadius: 1,
+                //         blurRadius: 1,
+                //         offset: const Offset(0, 1), // changes position of shadow
+                //       ),
+                //     ],
+                //   ),
+                //   child: const Column(
+                //       mainAxisAlignment: MainAxisAlignment.center,
+                //       crossAxisAlignment: CrossAxisAlignment.center,
+                //     children: [
+                //       Icon(Icons.add),
+                //       Text('Add Savings'),
+                //     ],
+                //   ),
+                // ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

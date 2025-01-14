@@ -114,31 +114,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     onTap:() => Get.toNamed(RouteHelper.getEditProfileRoute()),
                   ),
 
-                  CustomInkWellWidget(
-                    child: widget.MenuItem(image: Images.withdraw,title: 'withdraw_history'.tr),
-                    onTap: () => Get.to(()=> const RequestedMoneyListScreen(requestType: RequestType.withdraw)),
-                  ),
+                  // CustomInkWellWidget(
+                  //   child: widget.MenuItem(image: Images.withdraw,title: 'withdraw_history'.tr),
+                  //   onTap: () => Get.to(()=> const RequestedMoneyListScreen(requestType: RequestType.withdraw)),
+                  // ),
 
 
-                  CustomInkWellWidget(
-                    child: widget.MenuItem(image: Images.requestListImage2,title: 'requests'.tr),
-                    onTap: () => Get.to(()=> const RequestedMoneyListScreen(requestType: RequestType.request)),
-                  ),
+                  // CustomInkWellWidget(
+                  //   child: widget.MenuItem(image: Images.requestListImage2,title: 'requests'.tr),
+                  //   onTap: () => Get.to(()=> const RequestedMoneyListScreen(requestType: RequestType.request)),
+                  // ),
 
                   CustomInkWellWidget(
                     child: widget.MenuItem(image: Images.myRequestedListImage,title: 'send_requests'.tr),
                     onTap: () => Get.to(()=> const RequestedMoneyListScreen(requestType: RequestType.sendRequest)),
                   ),
 
-                  if(transactionTableModelList.isNotEmpty) CustomInkWellWidget(
-                    child: widget.MenuItem(
-                      image: Images.transactionLimit,
-                      title: 'transaction_limit'.tr,
-                    ),
-                    onTap: () => Get.to(()=> TransactionLimitScreen(
-                      transactionTableModelList: transactionTableModelList,
-                    )),
-                  ),
+                  // if(transactionTableModelList.isNotEmpty) CustomInkWellWidget(
+                  //   child: widget.MenuItem(
+                  //     image: Images.transactionLimit,
+                  //     title: 'transaction_limit'.tr,
+                  //   ),
+                  //   onTap: () => Get.to(()=> TransactionLimitScreen(
+                  //     transactionTableModelList: transactionTableModelList,
+                  //   )),
+                  // ),
 
                   CustomInkWellWidget(
                     child: widget.MenuItem(image: Images.pinChangeLogo,title: 'change_pin'.tr),

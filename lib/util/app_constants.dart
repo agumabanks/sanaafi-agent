@@ -5,8 +5,8 @@ import 'images.dart';
 
 class AppConstants {
   static const String appName = 'Field Agent';
-  // static const String baseUrl = 'https://kansanga.sanaa.co'; https://kansanga.sanaa.co/admin
-  static const String baseUrl = 'https://kansanga.sanaa.co';
+  // static const String baseUrl = 'https://bafubira.sanaa.co'; https://bafubira.sanaa.co/admin https://melcom.sanaa.co/admin/auth/login
+  static const String baseUrl = 'https://nato.sanaa.co';
   static const bool demo = false;
   static const double appVersion = 4.3;
 
@@ -34,7 +34,7 @@ class AppConstants {
   static const String userLoansList = '/api/v1/loan-lists'; ///api/v1/loan-lists/24  getAgentLoanAmount
   static const String getAgentLoanAmount = '/api/v1/today-instal-sum';
 // todayScheduledLoans
-  static const String todayScheduledLoans = '/api/v1/todaysSchedule'; 
+  static const String todayScheduledLoans = '/api/v1/todaysSchedule' ; 
 
 // pay loan
 static const String payLoan = '/api/v1/loans/pay';

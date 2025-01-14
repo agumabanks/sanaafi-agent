@@ -127,7 +127,7 @@ Future<void> fetchClientsWhoPaidToday({bool isNextPage = false}) async {
     }
 
     final response = await http.get(
-      Uri.parse('https://kansanga.sanaa.co/api/v1/getClientsWhoPaidToday?per_page=20&page=$currentPaidTodayPage'),
+      Uri.parse('https://bafubira.sanaa.co/api/v1/getClientsWhoPaidToday?per_page=20&page=$currentPaidTodayPage'),
     );
 
     if (response.statusCode == 200) {
@@ -178,7 +178,7 @@ Future<void> fetchClientsWithUnpaidLoansToday({bool isNextPage = false}) async {
 
     try {
       final response = await http.get(
-        Uri.parse('https://kansanga.sanaa.co/api/v1/unpaidclients?page=${currentPage.value}&per_page=20'),
+        Uri.parse('https://bafubira.sanaa.co/api/v1/unpaidclients?page=${currentPage.value}&per_page=20'),
       );
 
       if (response.statusCode == 200) {
@@ -242,7 +242,7 @@ Future<void> fetchClientsWithUnpaidLoansToday({bool isNextPage = false}) async {
     isLoadingClients(true); // Set loading to true
     try {
       final response = await http.get(
-        Uri.parse('https://kansanga.sanaa.co/api/v1/agents/$agentId/clients/total'),
+        Uri.parse('https://bafubira.sanaa.co/api/v1/agents/$agentId/clients/total'),
       );
 
       if (response.statusCode == 200) {
@@ -266,7 +266,7 @@ Future<void> fetchClientsWithUnpaidLoansToday({bool isNextPage = false}) async {
   Future<void> fetchClientsWithRunningLoans(int agentId) async {
     await _fetchClientData(
       agentId:agentId,
-       url:'https://kansanga.sanaa.co/api/v1/agents/$agentId/clients-with-running-loans',
+       url:'https://bafubira.sanaa.co/api/v1/agents/$agentId/clients-with-running-loans',
       onDataSuccess:(data) => clientsListRunning.value = ClientsLoansPageRunning.fromJson(data).data ?? [],
        onTotalSuccess:(data) => totalClientsRunning.value = ClientsLoansPageRunning.fromJson(data).totalClients ?? 0,
     );
@@ -281,7 +281,7 @@ Future<void> fetchClientsWithUnpaidLoansToday({bool isNextPage = false}) async {
     isSearchLoadingData(true);  // Set loading state to true
     try {
       final response = await http.get(
-        Uri.parse('https://kansanga.sanaa.co/api/v1/clients/search?q=$query'),  // Search API
+        Uri.parse('https://bafubira.sanaa.co/api/v1/clients/search?q=$query'),  // Search API
       );
 
       if (response.statusCode == 200) {
@@ -326,7 +326,7 @@ Future<void> fetchClientsWithUnpaidLoansToday({bool isNextPage = false}) async {
   Future<void> fetchClientsWithUnPaidLoans(int agentId) async {
     await _fetchClientData(
       agentId: agentId,
-      url:'https://kansanga.sanaa.co/api/v1/agents/$agentId/clients-with-paid-loans',
+      url:'https://bafubira.sanaa.co/api/v1/agents/$agentId/clients-with-paid-loans',
       onDataSuccess:(data) => clientsListPaid.value = ClientsLoansPagePaid.fromJson(data).data ?? [],
       onTotalSuccess:  (data) => totalClientsPaid.value = ClientsLoansPagePaid.fromJson(data).totalClients ?? 0, 
       
@@ -337,7 +337,7 @@ Future<void> fetchClientsWithUnpaidLoansToday({bool isNextPage = false}) async {
   Future<void> fetchClientsWithPendingLoans(int agentId) async {
     await _fetchClientData(
        agentId: agentId,
-      url:'https://kansanga.sanaa.co/api/v1/agents/$agentId/clients-with-pending-loans',
+      url:'https://bafubira.sanaa.co/api/v1/agents/$agentId/clients-with-pending-loans',
       onDataSuccess:(data) => clientsListPending.value = ClientsLoansPagePending.fromJson(data).data ?? [],
        onTotalSuccess:(data) => totalClientsPending.value = ClientsLoansPagePending.fromJson(data).totalClients ?? 0,
     );
@@ -347,7 +347,7 @@ Future<void> fetchClientsWithUnpaidLoansToday({bool isNextPage = false}) async {
   Future<void> fetchClientsWithPaidLoans(int agentId) async {
     await _fetchClientData(
       agentId: agentId,
-      url:'https://kansanga.sanaa.co/api/v1/agents/$agentId/clients-with-paid-loans',
+      url:'https://bafubira.sanaa.co/api/v1/agents/$agentId/clients-with-paid-loans',
       onDataSuccess:(data) => clientsListPaid.value = ClientsLoansPagePaid.fromJson(data).data ?? [],
     onTotalSuccess:  (data) => totalClientsPaid.value = ClientsLoansPagePaid.fromJson(data).totalClients ?? 0, 
       

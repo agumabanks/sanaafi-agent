@@ -6,10 +6,10 @@ import 'userLoan.dart';
 // import 'user_loan.dart';
 
 class NetworkService {
-  static const String baseUrl = 'https://kansanga.sanaa.co/api/v1';
+  static const String baseUrl = 'https://bafubira.sanaa.co/api/v1';
 
   Future<List<UserLoan>> fetchUserLoans(int userId) async {
-    final response = await http.post(Uri.parse('https://kansanga.sanaa.co/api/v1/loan-lists/?id=1'));
+    final response = await http.post(Uri.parse('https://bafubira.sanaa.co/api/v1/loan-lists/?id=1'));
 
     if (response.statusCode == 200) {
       return userLoanFromJson(response.body);

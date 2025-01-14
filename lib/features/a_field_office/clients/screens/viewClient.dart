@@ -178,8 +178,8 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
                                                                 borderRadius: const BorderRadius.all(Radius.circular(Dimensions.radiusProfileAvatar)),
                                                                 child: CustomImageWidget(
                                                                   fit: BoxFit.cover,
-                                                                  // https://kansanga.sanaa.co/storage/app/public/clients/photos/WswWAGeAnVbHtQy8eoSoTT4eVEwoC5Xn9Wmpperp.jpg
-                                                                  image: "https://kansanga.sanaa.co/storage/app/public/${controller.clientProfile!.content!.first.client_photo}",
+                                                                  // https://bafubira.sanaa.co/storage/app/public/clients/photos/WswWAGeAnVbHtQy8eoSoTT4eVEwoC5Xn9Wmpperp.jpg
+                                                                  image: "https://bafubira.sanaa.co/storage/app/public/${controller.clientProfile!.content!.first.client_photo}",
                                                                   placeholder: Images.avatar,
                                                                 ),
                                                               ),

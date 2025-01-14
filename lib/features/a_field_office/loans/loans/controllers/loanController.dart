@@ -117,7 +117,7 @@ Future<void> fetchClientLoansHistory(int clientId) async {
   Future<void> fetchLoanOffers() async {
     _isLoading = true;
     update();
-    final url = 'https://kansanga.sanaa.co/api/v1/loan-plans';
+    final url = 'https://bafubira.sanaa.co/api/v1/loan-plans';
     try {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
@@ -135,7 +135,7 @@ Future<void> fetchClientLoansHistory(int clientId) async {
   }
 
   Future<void> fetchUserLoans() async {
-    final url = 'https://kansanga.sanaa.co/api/v1/loan-lists/1';
+    final url = 'https://bafubira.sanaa.co/api/v1/loan-lists/1';
     try {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
