@@ -13,7 +13,6 @@ import 'package:six_cash/features/setting/screens/edit_profile_screen.dart';
 import '../../../main.dart';
 import '../../auth/screens/sign_up_information_screen.dart';
 import '../widgets/loader_dialog_widget.dart';
-import 'package:torch_light/torch_light.dart';
 
 class CameraScreenController extends GetxController implements GetxService{
   bool _isBusy = false;
@@ -35,67 +34,6 @@ class CameraScreenController extends GetxController implements GetxService{
 
   bool _fromEditProfile = false;
   bool get fromEditProfile => _fromEditProfile;
-
-  var isFlashlightOn = false.obs;
-
-
-  var isTorchAvailable = false.obs;
-  var isTorchOn = false.obs;
-
-  @override
-  void onInit() {
-    super.onInit();
-    checkTorchAvailability();
-  }
-
-  Future<void> checkTorchAvailability() async {
-    try {
-      isTorchAvailable.value = await TorchLight.isTorchAvailable();
-    } catch (e) {
-      Get.snackbar('Error', 'Could not check if the device has an available torch');
-    }
-  }
-
-  Future<void> toggleTorch() async {
-    if (isTorchOn.value) {
-      await disableTorch();
-    } else {
-      await enableTorch();
-    }
-  }
-
-  Future<void> enableTorch() async {
-    try {
-      await TorchLight.enableTorch();
-      isTorchOn.value = true;
-    } catch (e) {
-      Get.snackbar('Error', 'Could not enable torch');
-    }
-  }
-
-  Future<void> disableTorch() async {
-    try {
-      await TorchLight.disableTorch();
-      isTorchOn.value = false;
-    } catch (e) {
-      Get.snackbar('Error', 'Could not disable torch');
-    }
-  }
-  
-  // Method to toggle the flashlight
-  Future<void> toggleFlashlight() async {
-    try {
-      if (isFlashlightOn.value) {
-        await TorchLight.disableTorch();
-        isFlashlightOn(false);
-      } else {
-        await TorchLight.enableTorch();
-        isFlashlightOn(true);
-      }
-    } catch (e) {
-      print("Error: $e");
-    }
-  }
 
   valueInitialize(bool fromEditProfile) {
     _eyeBlink = 0;

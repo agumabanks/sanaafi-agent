@@ -40,8 +40,7 @@ class TransactionListWidget extends StatelessWidget {
         }
       }
 
-      return  Column(
-        children: [!transactionHistory.firstLoading ? transactionList.isNotEmpty ?
+      return  Column(children: [!transactionHistory.firstLoading ? transactionList.isNotEmpty ?
       Padding(
          padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeExtraSmall),
           child: ListView.builder(

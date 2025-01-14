@@ -4,48 +4,10 @@ import 'package:six_cash/common/models/on_boarding_model.dart';
 import 'images.dart';
 
 class AppConstants {
-  static const String appName = 'Field Agent';
-  // static const String baseUrl = 'https://bafubira.sanaa.co'; https://bafubira.sanaa.co/admin https://melcom.sanaa.co/admin/auth/login
-  static const String baseUrl = 'https://nato.sanaa.co';
+  static const String appName = '6Cash';
+  static const String baseUrl = 'https://app.sanaa.co';
   static const bool demo = false;
   static const double appVersion = 4.3;
-
-  static const String getClients = '/api/v1/clients';
-   static const String getAgentClients = '/api/v1/agentclients';
-
-  // aadd client addClientLoan
-    static const String addClients = '/api/v1/addclients';
-    static const String addClientLoan = '/api/v1/create-loans';
-    static const String getClientsProfile = '/api/v1/getClient';
-    static const String getClientsLoans = '/api/v1/clientLoans';
-
-    // getClientLoansHistory
-    static const String getClientLoansHistory = '/api/v1/clientLoanspayHistory';
-
-
-      static const String getcustomerDataUri = '/api/v1/getUserByPhone';
-      static const String clientguarantorsList = '/api/v1/clientguarantorsList';
-
-
-
-      // clientPhotos
-       static const String clientPhotos = '/api/v1/clientphotos';
-      
-  static const String userLoansList = '/api/v1/loan-lists'; ///api/v1/loan-lists/24  getAgentLoanAmount
-  static const String getAgentLoanAmount = '/api/v1/today-instal-sum';
-// todayScheduledLoans
-  static const String todayScheduledLoans = '/api/v1/todaysSchedule' ; 
-
-// pay loan
-static const String payLoan = '/api/v1/loans/pay';
-
-    
-    static const String getClientQr = '/api/v1/getClientQr';
-    static const String addClientGuarantor = '/api/v1/addClientGuarantor';
-
-
-
-
   static const String customerPhoneCheckUri = '/api/v1/customer/auth/check-phone';
   static const String customerPhoneVerifyUri = '/api/v1/customer/auth/verify-phone';
   static const String customerRegistrationUri = '/api/v1/customer/auth/register';

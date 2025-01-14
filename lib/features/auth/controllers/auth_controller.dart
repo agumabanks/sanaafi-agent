@@ -3,22 +3,11 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:app_settings/app_settings.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:phone_numbers_parser/phone_numbers_parser.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:six_cash/features/a_field_office/clients/domain/client.dart';
-import 'package:six_cash/features/a_field_office/clients/domain/clientProfile.dart';
-import 'package:six_cash/features/a_field_office/clients/domain/clientShortData.dart';
-import 'package:six_cash/features/a_field_office/home/domain/AgentTodaysLoans.dart';
-// import 'package:six_cash/features/a_field_office/loans/domain/userLoan.dart';
-import 'package:six_cash/features/a_field_office/loans/loans/domain/userLoan.dart';
-import 'package:six_cash/features/camera_verification/controllers/qr_code_scanner_controller.dart';
-import 'package:six_cash/features/setting/domain/models/profile_model.dart';
 import 'package:six_cash/features/transaction_money/controllers/bootom_slider_controller.dart';
 import 'package:six_cash/features/setting/controllers/profile_screen_controller.dart';
 import 'package:six_cash/features/camera_verification/controllers/camera_screen_controller.dart';
@@ -34,11 +23,6 @@ import 'package:six_cash/helper/route_helper.dart';
 import 'package:six_cash/util/app_constants.dart';
 import 'package:six_cash/helper/custom_snackbar_helper.dart';
 
-import '../../a_field_office/clients/domain/clientQrCode.dart';
-import 'dart:convert';  // For json encoding and decoding
-import 'package:http/http.dart' as http;  // Import http package for making HTTP requests
-import 'package:get/get.dart';
-import 'package:flutter/material.dart';
 class AuthController extends GetxController implements GetxService {
   final AuthRepo authRepo;
   AuthController({required this.authRepo}) {
@@ -57,542 +41,6 @@ class AuthController extends GetxController implements GetxService {
     bool get isVerifying => _isVerifying;
     bool get biometric => _biometric;
     bool get isBiometricSupported => _isBiometricSupported;
-
-  UserShortDataModel? userData;
-  String? phoneNumberUser;
-  List<UserLoan>? _userLoans;
-  List<UserLoan>? get userLoans => _userLoans;
-
-// fetch todays scheduled by the agent
-List<DataContent> _agentTodaySche = [];
-List<DataContent> get agentTodaySche => _agentTodaySche;
-
-
-
-
-
-String? _clientInfo;
-
-
-
- String? _clientCode;
-
-  String? get clientCode => _clientCode;
-
-  Future<String?> getClientQrCode(int id) async {
-     _isLoading = true;
-    Response response = await authRepo.getclientData(id);
-    if (response.statusCode == 200) {
-      _clientCode = response.body['qr_code'];
-      print('___________#code \n___________${_clientCode}');
-      update(); // Notify GetX to rebuild the UI
-       _isLoading = false;
-      return _clientCode;
-    } else {
-      // Handle error
-      print('Failed to load client QR code');
-      _isLoading = false;
-      return null;
-    }
-  }
-
-void resetClient(){
-  _clientCode = null;
-  _isLoading = false;
-  // _agentTodaySche = [];
-  // _loanAmount = 0;
-}
-
-
-
-// get client QR code
-Future<void> getClientQrCode2() async {
-  Response response = await authRepo.getclientData(59);
-  if (response.statusCode == 200) {
-    // final clientQrCode = clientQrCodeFromJson(response.body);
-    // _clientInfo = clientQrCode;
-
-    print('\n \n this is the code\n \n \n ${response.body['qr_code']}');
-  } else {
-    // Handle error
-    print('\n \n \n \n \n Failed to load client QR code');
-  }
-}
-
-// pay loan
-// https://bafubira.sanaa.co/api/v1/loans/pay?client_id=59&amount=1973
-Future<void> payLoan10(int clientId, int amount) async {
-  try {
-    // Retrieve saved customer data from SharedPreferences
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? savedCustomerDataJson = prefs.getString('customerData');
-
-    if (savedCustomerDataJson != null) {
-      // Decode the saved customer data
-      Map<String, dynamic> savedCustomerData = jsonDecode(savedCustomerDataJson);
-      var addedBy = savedCustomerData['id'];
-
-      // Make API call to pay loan
-      Response response = await authRepo.payLoan(clientId, amount, addedBy );
-
-      if (response.statusCode == 200 && response.body['response_code'] == 'default_200') {
-        showCustomSnackBarHelper('Payment Successful',isError: false);
-        Get.defaultDialog(
-          title: 'Payment Successful',
-          middleText: 'your Balance is ${ response.body['remaining_balance']}',
-          textConfirm: 'OK',
-          confirmTextColor: Colors.white,
-          onConfirm: () {
-            Get.offAllNamed(RouteHelper.getNavBarRoute(), arguments: true);
-            // Get.back(); // Close the dialog
-            Get.find<QrCodeScannerController>().resetValues();
-            Get.find<AuthController>().getUserData();
-          },
-          barrierDismissible: false, // Prevent closing the dialog by tapping outside
-        );
-
-        
-
-      } else {
-        // Handle failed payment
-        print("Loan payment failed: ${response.body['message']}");
-      }
-    } else {
-      print("No customer data found in SharedPreferences.");
-    }
-  } catch (e) {
-    // Handle any other errors
-    print("Error occurred while paying loan: $e");
-  }
-}
-
-  bool _isLoading2 = false;
-
-  // Getter for isLoading
-  bool get isLoading2 => _isLoading2;
-
-  Future<void> payLoan(int clientId, int amount) async {
-    try {
-      _isLoading2 = true;
-      update(); // Trigger UI update
-
-      // Retrieve saved customer data from SharedPreferences
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? savedCustomerDataJson = prefs.getString('customerData');
-
-      if (savedCustomerDataJson != null) {
-        // Decode the saved customer data
-        Map<String, dynamic> savedCustomerData = jsonDecode(savedCustomerDataJson);
-        var addedBy = savedCustomerData['id'];
-
-        // Make API call to pay loan
-        Response response = await authRepo.payLoan(clientId, amount, addedBy);
-
-        if (response.statusCode == 200 && response.body['response_code'] == 'default_200') {
-          showCustomSnackBarHelper('Payment Successful', isError: false);
-          Get.defaultDialog(
-            title: 'Payment Successful',
-            middleText: 'Your Balance is ${response.body['remaining_balance']}',
-            textConfirm: 'OK',
-            confirmTextColor: Colors.white,
-            onConfirm: () {
-              Get.offAllNamed(RouteHelper.getNavBarRoute(), arguments: true);
-              Get.find<QrCodeScannerController>().resetValues();
-              Get.find<AuthController>().getUserData();
-            },
-            barrierDismissible: false, // Prevent closing the dialog by tapping outside
-          );
-        } else {
-          // Handle failed payment
-          print("Loan payment failed: ${response.body['message']}");
-        }
-      } else {
-        print("No customer data found in SharedPreferences.");
-      }
-    } catch (e) {
-      // Handle any other errors
-      print("Error occurred while paying loan: $e");
-    } finally {
-      _isLoading2 = false;
-      update(); // Trigger UI update to remove the loading indicator
-    }
-  }
-
-Future<void> getTodayScheduledLoans() async {
-  try {
-    // Retrieve saved customer data from SharedPreferences
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? savedCustomerDataJson = prefs.getString('customerData');
-
-    if (savedCustomerDataJson != null) {
-      // Decode the saved customer data
-      Map<String, dynamic> savedCustomerData = jsonDecode(savedCustomerDataJson);
-      var addedBy = savedCustomerData['id'];
-
-      // Make API call to fetch today's scheduled loans
-      Response response = await authRepo.todayScheduledLoans(addedBy);
-
-      if (response.statusCode == 200 && response.body['response_code'] == 'default_200') {
-        // Parse the response into AgentTodaysLoans model
-        final AgentTodaysLoans agentTodaysLoans = AgentTodaysLoans.fromJson(response.body);
-
-        // Update the _agentTodaySche list with the fetched data
-        _agentTodaySche = agentTodaysLoans.dataContent ?? [];
-        print("______________agentTodaySche_______________\n____________${_agentTodaySche.length}____loans____________________");
-
-      } else {
-        // Handle unexpected API response
-        ApiChecker.checkApi(response);
-      }
-    } else {
-      // Handle missing or invalid customer data
-      print("Error: No customer data found in SharedPreferences.");
-    }
-  } catch (e) {
-    // Handle exceptions
-    print("Exception: $e");
-  } finally {
-    // If you have any loading indicator, you can stop it here
-    update(); // Update the UI by calling GetX's update method
-  }
-}
-
-
-
-
-
-  Future<void> getUserLoans({bool isReload = false}) async {
-    if (_userLoans == null || isReload) {
-      
-      Response response = await authRepo.userLoansList('1');
-
-
-      if (response.body['response_code'] == 'default_200' && response.body['content'] != null) {
-        _userLoans = userLoanFromJsonList(response.body['content']);
-      } else {
-        ApiChecker.checkApi(response);
-      }
-      update();
-    }
-  }
-
-   // Method to reset user loans
-  void resetUserLoans() {
-    _userLoans = null;
-    update();  
-  }
-  // var customer = {}.obs;
-  var customer = <String, dynamic>{}.obs;
-
-  var isLoadingCustomer = true.obs;
-
- 
-
-
-Future<void> getUserByPhone(String phone) async {
-  try {
-    isLoadingCustomer(true);
-    print("_____________\n____Requesting customer by phone:__________\n__________\n__________\n__________\n");
-
-    // Define the URL for the POST request
-    final url = Uri.parse('https://bafubira.sanaa.co/api/v1/getUserByPhone');
-
-    // Make the POST request, sending the phone number in the body
-    final response = await http.post(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      body: jsonEncode({
-        'phone': phone,
-      }),
-    );
-
-    // Check if the response was successful
-    if (response.statusCode == 200) {
-      var responseData = json.decode(response.body);
-      customer.value = responseData['customer'];
-      
-      // Print customer data for debugging
-      print("_____________\n____Customer retrieved:__________\n____${customer.value}______\n__________\n__________\n");
-      
-      // Save customer data to shared preferences
-      await saveCustomerData(customer.value);
-    } else {
-      // Handle the case where the server returns a non-200 status code
-      Get.snackbar("Error", "User not found");
-      print('Error: Failed to load customer. Status Code: ${response.statusCode}');
-      print('Response Body: ${response.body}');
-    }
-  } catch (e) {
-    // Handle any errors that occur during the request
-    Get.snackbar("Error", e.toString());
-    print('Error occurred: $e');
-  } finally {
-    // Set loading state to false
-    isLoadingCustomer(false);
-  }
-}
-
-
-
-
-  Future<Response> login({String? code, String? phone, String? password}) async {
-    _isLoading = true;
-    update();
-
-    Response response = await authRepo.login(phone: phone, password: password, dialCode: code);
-
-    if (response.statusCode == 200 && response.body['response_code'] == 'auth_login_200' && response.body['content'] != null) {
-       authRepo.saveUserToken(response.body['content']).then((value) async {
-         await authRepo.updateToken();
-       });
-      if(Get.currentRoute != RouteHelper.navbar) {
-        Get.offAllNamed(RouteHelper.getNavBarRoute(), arguments: true);
-        // getCustomerData();
-        getUserByPhone('+256$phone');
-      }
-    }
-    else{
-      ApiChecker.checkApi(response);
-    }
-    _isLoading = false;
-    update();
-    return response;
-  }
-
-
-
-// Function to save customer data in SharedPreferences
-  Future<void> saveCustomerData(Map<String, dynamic> customerData) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String customerDataJson = jsonEncode(customerData);
-    await prefs.setString('customerData', customerDataJson);
-
-    // Retrieve and verify saved customer data
-    String? savedCustomerDataJson = prefs.getString('customerData');
-    if (savedCustomerDataJson != null) {
-      Map<String, dynamic> savedCustomerData = jsonDecode(savedCustomerDataJson);
-      var userId = savedCustomerData['id'];
-
-      if (kDebugMode) {
-        print('________________________________________________________________');
-        print('Saved customer data: $savedCustomerData');
-        print('________________________________________________________________');
-        print('User ID: $userId');
-        print('________________________________________________________________');
-      }
-    }
-  }
-
-
-Future<void> getCustomerData() async {
-  try {
-    _isLoading = true;
-    update();
-
-    userData = Get.find<AuthController>().getUserData();
-    phoneNumberUser = userData!.phone!;
-
-    Response response = await authRepo.getCustomerData(phoneNumber: "%2B256${phoneNumberUser}");
-
-           print('_____________\n_____________\n_____________print ${response.body['customer']}  \n_____________\n_____________\n_____________phone: %2B256${phoneNumberUser}\n_____________\n');
-
-    if (response.statusCode == 200) {
-      if (response.body['user_type'] == 'customer') {
-       
-           print('_____________\n_____________\n_____________print ${response.body['customer']} \n_____________\n_____________\n');
-
-      } else {
-        // Handle the case for agents or other user types
-         var customerData = response.body['customer'];
-             print('_____________\n_____________\n_____________print ${response.body['customer']} \n_____________\n_____________\n');
-
-
-        // Save customer data in shared preferences as a JSON string
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        String customerDataJson = jsonEncode(customerData);
-        await prefs.setString('customerData', customerDataJson);
-
-        // Retrieve and print the customer data to verify it is saved
-        String? savedCustomerDataJson = prefs.getString('customerData');
-        Map<String, dynamic> savedCustomerData = jsonDecode(savedCustomerDataJson!);
-        var userId = savedCustomerData['id'];
-        if (kDebugMode) {
-          print('________________________________________________________________');
-          print('________________________________________________________________'); print('________________________________________________________________');
-          print('Saved customer data: $savedCustomerData');
-                print('________________________________________________________________'); 
-                print('_______________________________${userId}_________________________________');
-                 print('________________________________________________________________');
-
-       
-        }  // return userId;
-      }
-    } else {
-      // Handle non-200 status codes
-      if (kDebugMode) {
-        print('Error: ${response.statusCode}');
-      }
-    }
-  } catch (e) {
-    // Handle exceptions
-    if (kDebugMode) {
-      print('Exception: $e');
-    }
-  } finally {
-    _isLoading = false;
-    update();
-  }
-}
-
-
-
-
-double _loanAmount = 0;
-double get loanAmount => _loanAmount;
-
-double _loanAmountCollected = 0;
-double get loanAmountCollected => _loanAmountCollected;
-
-
- String get formattedLoanAmount {
-    final formatter = NumberFormat('#,##0');
-    return formatter.format(_loanAmount);
-  }
-
-  String get formattedLoanAmountCollected {
-    final formatter = NumberFormat('#,##0');
-    return formatter.format(_loanAmountCollected);
-  }
-  // var _isLoading = false.obs;
-  // bool get isLoading => _isLoading.value;
-
-  Future<void> getAgentLoanAmount() async {
-    _isLoading = true;
-
-    // Retrieve the agent ID from SharedPreferences
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? savedCustomerDataJson = prefs.getString('customerData');
-
-    // Map<String, dynamic> savedCustomerData = jsonDecode(savedCustomerDataJson);
-    //   var addedBy = savedCustomerData['id'];
-
-   
-    if (savedCustomerDataJson != null) {
-          // Decode the saved customer data
-          Map<String, dynamic> savedCustomerData = jsonDecode(savedCustomerDataJson);
-          var addedBy = savedCustomerData['id'];
-
-        try {
-          // Make the API call to fetch the loan amount for the agent
-            Response response = await authRepo.getAgentLoanAmount(addedBy);
-
-            
-
-            // var responseBody = jsonDecode(response.body);
-            print('___________##___________${response.body['total_amount'] }');
-
-            _loanAmount = double.parse(response.body['total_amount'].toString());
-            _loanAmountCollected = double.parse(response.body['collected'].toString());
-      
-
-            print(response.body);
-
-            if (response.statusCode == 200) {
-              var responseBody = jsonDecode(response.body);
-
-            
-            } else {
-              // Handle non-200 status codes
-              if (kDebugMode) {
-                print('Error: ${response.statusCode}');
-              }
-            }
-          } catch (e) {
-            // Handle exceptions
-            if (kDebugMode) {
-              print('Exception: $e');
-            }
-          } finally {
-            _isLoading = false;
-            update();
-          }
-        } 
-
-        // Map<String, dynamic> savedCustomerData = jsonDecode(savedCustomerDataJson);
-        // var agentId = savedCustomerData['id'];
-
-    
-  }
-
-
-ClientProfile? _clientProfile;
-  ClientProfile? get clientProfile => _clientProfile;
-// get client profile
-// final clientProfile = clientProfileFromJson(jsonString);
- Future<void> getClientProfile(int id) async {
-  _isLoading = true;
-  update();
-
-  Response response = await authRepo.getClientProfile(id);
-
-  if (response.body['response_code'] == 'default_200' && response.body['content'] != null) {
-    if (kDebugMode) {
-      print('____________________________________');
-      print('____________________________________');
-      print('______client data_________${response.body['content']}_____________________');
-      print('____________________________________');
-      print('____________________________________');
-      print('____________________________________');
-    }
-
-    // Parsing content correctly
-    _clientProfile = ClientProfile.fromJson({"content": response.body['content']});
-  } else {
-    ApiChecker.checkApi(response);
-  }
-
-  _isLoading = false;
-  update();
-}
-
-
-
- List<Clients> _clientList = [];
- List<Clients> get clients => _clientList;
- 
-
- Future<void> getClients() async {
-      _isLoading = true;
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? savedCustomerDataJson = prefs.getString('customerData');
-      update();
- 
-        Map<String, dynamic> savedCustomerData = jsonDecode(savedCustomerDataJson!);
-        var userId = savedCustomerData['id'];
-      Response response = await authRepo.getClients(userId);
-
-      if (response.body['response_code'] == 'default_200' && response.body['content'] != null) {
-        print('____________________________________');
-        print('____________________________________');
-        print('_______________${response.body['content']}_____________________');
-        print('____________________________________');
-        print('____________________________________');
-        print('____________________________________');
-        
-        // Parsing content correctly
-        _clientList = clientsFromJson(json.encode(response.body));
-        
-      } else {
-        ApiChecker.checkApi(response);
-      }
-
-      _isLoading = false;
-      update();
-  }
-
 
 
 
@@ -697,7 +145,7 @@ ClientProfile? _clientProfile;
          Get.find<VerificationController>().startTimer();
          Get.toNamed(RouteHelper.getVerifyRoute());
         }else{
-          
+          showCustomSnackBarHelper(response.body['message']);
         }
 
       }
@@ -812,6 +260,29 @@ ClientProfile? _clientProfile;
       _isLoading = false;
       update();
       return response;
+  }
+
+
+  Future<Response> login({String? code, String? phone, String? password}) async {
+    _isLoading = true;
+    update();
+
+    Response response = await authRepo.login(phone: phone, password: password, dialCode: code);
+
+    if (response.statusCode == 200 && response.body['response_code'] == 'auth_login_200' && response.body['content'] != null) {
+       authRepo.saveUserToken(response.body['content']).then((value) async {
+         await authRepo.updateToken();
+       });
+      if(Get.currentRoute != RouteHelper.navbar) {
+        Get.offAllNamed(RouteHelper.getNavBarRoute(), arguments: true);
+      }
+    }
+    else{
+      ApiChecker.checkApi(response);
+    }
+    _isLoading = false;
+    update();
+    return response;
   }
 
 

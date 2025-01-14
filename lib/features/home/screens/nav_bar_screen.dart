@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+
+// Replace these imports with your actual file references
 import 'package:six_cash/common/widgets/custom_dialog_widget.dart';
 import 'package:six_cash/features/auth/controllers/auth_controller.dart';
 import 'package:six_cash/features/camera_verification/screens/camera_screen.dart';
@@ -12,6 +14,35 @@ import 'package:six_cash/helper/dialog_helper.dart';
 import 'package:six_cash/util/color_resources.dart';
 import 'package:six_cash/util/dimensions.dart';
 import 'package:six_cash/util/images.dart';
+
+// PopScope is assumed to be your custom widget that handles back navigation logic.
+class PopScope extends StatelessWidget {
+  final bool canPop;
+  final Function(bool) onPopInvoked;
+  final Widget child;
+
+  const PopScope({
+    Key? key,
+    required this.canPop,
+    required this.onPopInvoked,
+    required this.child,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () async {
+        if (canPop) {
+          onPopInvoked(true);
+          return false;
+        }
+        onPopInvoked(false);
+        return false;
+      },
+      child: child,
+    );
+  }
+}
 
 class NavBarScreen extends StatefulWidget {
   const NavBarScreen({Key? key}) : super(key: key);
@@ -27,7 +58,6 @@ class _NavBarScreenState extends State<NavBarScreen> {
   void initState() {
     super.initState();
     Get.find<MenuItemController>().selectHomePage(isUpdate: false);
-
     Get.find<AuthController>().checkBiometricWithPin();
   }
 
@@ -35,95 +65,82 @@ class _NavBarScreenState extends State<NavBarScreen> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: Navigator.canPop(context),
-      onPopInvoked:(_) => _onWillPop(context),
+      onPopInvoked: (_) => _onWillPop(context),
       child: GetBuilder<MenuItemController>(builder: (menuController) {
         return Scaffold(
-          backgroundColor: Theme.of(context).bottomNavigationBarTheme.selectedItemColor,
-          body: PageStorage(bucket: bucket, child: menuController.screen[menuController.currentTabIndex]),
+          backgroundColor: Theme.of(context)
+              .bottomNavigationBarTheme
+              .selectedItemColor,
+          body: PageStorage(
+            bucket: bucket,
+            child: menuController.screen[menuController.currentTabIndex],
+          ),
 
-          // floatingActionButton: FloatingActionButtonWidget(
-          //   strokeWidth: 1.5,
-          //   radius: 50,
-          //   gradient: LinearGradient(
-          //     colors: [
-          //       ColorResources.gradientColor,
-          //       ColorResources.gradientColor.withOpacity(0.5),
-          //       ColorResources.secondaryColor.withOpacity(0.3),
-          //       ColorResources.gradientColor.withOpacity(0.05),
-          //       ColorResources.gradientColor.withOpacity(0),
-          //     ],
-          //     begin: Alignment.topCenter,
-          //     end: Alignment.bottomCenter,
-          //   ),
-          //   child: FloatingActionButton(
-          //     shape: const CircleBorder(),
-          //     backgroundColor: Theme.of(context).secondaryHeaderColor,
-          //     elevation: 1,
-          //     onPressed: ()=> Get.to(()=> const CameraScreen(
-          //       fromEditProfile: false, isBarCodeScan: true, isHome: true,
-          //     )),
-          //     child: Padding(
-          //       padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
-          //       child: Image.asset(Images.scannerIcon),
-          //     ),
-          //   ),
-          // ),
+          /// Wrap the bottom navigation in a Padding (or Container with margin) 
+          /// to move it up from the very bottom of the screen.
+          bottomNavigationBar: Padding(
+            padding: const EdgeInsets.only(bottom: 12.0,left: 10, right: 10), // Adjust as needed
+            child: Container(
+              height: 60,
+              decoration: BoxDecoration(
+                color: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(12),
+                  topRight: Radius.circular(12),
 
-          // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-
-          bottomNavigationBar: Container(
-            height: 60,
-            decoration: BoxDecoration(
-              color: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
+                  bottomLeft: Radius.circular(12),
+                  bottomRight: Radius.circular(12),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: ColorResources.getBlackAndWhite().withOpacity(0.14),
+                    blurRadius: 80,
+                    offset: const Offset(0, 20),
+                  ),
+                  BoxShadow(
+                    color: ColorResources.getBlackAndWhite().withOpacity(0.20),
+                    blurRadius: 0.5,
+                    offset: const Offset(0, 0),
+                  ),
+                ],
               ),
-              boxShadow: [
-                BoxShadow(
-                  color: ColorResources.getBlackAndWhite().withOpacity(0.14),
-                  blurRadius: 80, offset: const Offset(0, 20),
-                ),
-                BoxShadow(
-                  color: ColorResources.getBlackAndWhite().withOpacity(0.20),
-                  blurRadius: 0.5, offset: const Offset(0, 0),
-                ),
-              ],
-            ),
-
-            child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                BottomItemWidget(
-                  onTop: () => menuController.selectHomePage(),
-                  icon: menuController.currentTabIndex == 0
-                      ? Images.homeIconBold : Images.homeIcon,
-                  name: 'home'.tr,
-                  selectIndex: 0,
-                ),
-
-                BottomItemWidget(
-                  onTop: () => menuController.selectHistoryPage(),
-                  icon: menuController.currentTabIndex == 1
-                      ? Images.clockIconBold : Images.clockIcon,
-                  name: 'Clients'.tr, selectIndex: 1,
-                ),
-                
-
-                BottomItemWidget(
-                  onTop: () => menuController.selectNotificationPage(),
-                  icon: menuController.currentTabIndex == 2
-                      ? Images.notificationIconBold : Images.notificationIcon,
-                  name: 'history'.tr, selectIndex: 2,
-                ),
-
-                BottomItemWidget(
-                  onTop: () => menuController.selectProfilePage(),
-                  icon: menuController.currentTabIndex == 3
-                      ? Images.profileIconBold : Images.profileIcon,
-                  name: 'More'.tr,
-                  selectIndex: 3,
-                ),
-              ],
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  BottomItemWidget(
+                    onTop: () => menuController.selectHomePage(),
+                    icon: menuController.currentTabIndex == 0
+                        ? Images.homeIconBold
+                        : Images.homeIcon,
+                    name: 'home'.tr,
+                    selectIndex: 0,
+                  ),
+                  BottomItemWidget(
+                    onTop: () => menuController.selectHistoryPage(),
+                    icon: menuController.currentTabIndex == 1
+                        ? Images.clockIconBold
+                        : Images.clockIcon,
+                    name: 'history'.tr,
+                    selectIndex: 1,
+                  ),
+                  BottomItemWidget(
+                    onTop: () => menuController.selectNotificationPage(),
+                    icon: menuController.currentTabIndex == 2
+                        ? Images.notificationIconBold
+                        : Images.notificationIcon,
+                    name: 'notification'.tr,
+                    selectIndex: 2,
+                  ),
+                  BottomItemWidget(
+                    onTop: () => menuController.selectProfilePage(),
+                    icon: menuController.currentTabIndex == 3
+                        ? Images.profileIconBold
+                        : Images.profileIcon,
+                    name: 'profile'.tr,
+                    selectIndex: 3,
+                  ),
+                ],
+              ),
             ),
           ),
         );
@@ -132,21 +149,23 @@ class _NavBarScreenState extends State<NavBarScreen> {
   }
 
   void _onWillPop(BuildContext context) {
-    DialogHelper.showAnimatedDialog(context,
-        CustomDialogWidget(
-          icon: Icons.exit_to_app_rounded, title: 'exit'.tr, description: 'do_you_want_to_exit_the_app'.tr, onTapFalse:() => Navigator.of(context).pop(false),
-          onTapTrue:() {
-            SystemNavigator.pop().then((value) => Get.offAll(()=> const SplashScreen()));
-
-            },
-          onTapTrueText: 'yes'.tr, onTapFalseText: 'no'.tr,
-        ),
-        dismissible: false,
-        isFlip: true,
+    DialogHelper.showAnimatedDialog(
+      context,
+      CustomDialogWidget(
+        icon: Icons.exit_to_app_rounded,
+        title: 'exit'.tr,
+        description: 'do_you_want_to_exit_the_app'.tr,
+        onTapFalse: () => Navigator.of(context).pop(false),
+        onTapTrue: () {
+          SystemNavigator.pop().then(
+            (value) => Get.offAll(() => const SplashScreen()),
+          );
+        },
+        onTapTrueText: 'yes'.tr,
+        onTapFalseText: 'no'.tr,
+      ),
+      dismissible: false,
+      isFlip: true,
     );
-
   }
 }
-
-
-

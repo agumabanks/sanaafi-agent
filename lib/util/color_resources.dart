@@ -80,7 +80,7 @@ class ColorResources {
     return Get.isDarkMode ? const Color(0xFF84b1cc) : const Color(0xFF344968);
   }
   static Color getBalanceTextColor() {
-    return Get.isDarkMode ? const Color(0xFFd7d7d7) : const Color(0xFF393939);
+    return Get.isDarkMode ? const Color(0xFF393939) : const Color( 0xFFd7d7d7);
   }
   static Color getShadoColor() {
     return Get.isDarkMode ? const Color(0xFFededed) : const Color(0xFF848484);

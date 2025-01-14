@@ -1,9 +1,5 @@
 import 'dart:convert';
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:six_cash/features/a_field_office/clients/controllers/AddGuarantorController.dart';
-import 'package:six_cash/features/a_field_office/loans/loans/controllers/loanController.dart';
-// import 'package:six_cash/features/a_field_office/loans/controllers/LoanController.dart';
-// import 'package:six_cash/features/a_field_office/loans/controllers/loanController.dart';
 import 'package:six_cash/features/forget_pin/domain/reposotories/forget_pin_repo.dart';
 import 'package:six_cash/features/home/controllers/banner_controller.dart';
 import 'package:six_cash/features/auth/controllers/create_account_controller.dart';
@@ -50,26 +46,16 @@ import 'package:six_cash/common/models/language_model.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:get/get.dart';
-import 'package:uuid/uuid.dart';
-// import 'package:unique_identifier/unique_identifier.dart';
+import 'package:unique_identifier/unique_identifier.dart';
 
 import '../features/kyc_verification/domain/reposotories/kyc_verify_repo.dart';
-import 'package:mobile_device_identifier/mobile_device_identifier.dart';
-import 'package:mobile_device_identifier/mobile_device_identifier.dart';
-
-import 'package:device_uuid/device_uuid.dart';
 
 
 Future<Map<String, Map<String, String>>> init() async {
   // Core
   final sharedPreferences = await SharedPreferences.getInstance();
   final BaseDeviceInfo deviceInfo =  await DeviceInfoPlugin().deviceInfo;
-   String? uniqueId =   Uuid().toString() ;
-
-  // final uuid = DeviceUuid().getUUID();
-  // final deviceIdentifier = await DeviceIdentifier.id;
-  // final _mobileDeviceIdentifier = MobileDeviceIdentifier().getDeviceId();
-
+  String? uniqueId = await  UniqueIdentifier.serial ?? '';
 
   Get.lazyPut(() => uniqueId);
   Get.lazyPut(() => sharedPreferences);
@@ -101,9 +87,6 @@ Future<Map<String, Map<String, String>>> init() async {
   Get.lazyPut(() => ContactRepo(apiClient: Get.find(), sharedPreferences: Get.find()));
 
   // Controller
-  // AddGuarantorController ClientLoanController
-  Get.lazyPut(() => AddGuarantorController());
-  Get.lazyPut(() => ClientLoanController());
   Get.lazyPut(() => ThemeController(sharedPreferences: Get.find()));
    Get.lazyPut(() => SplashController(splashRepo: Get.find()));
   Get.lazyPut(() => LocalizationController(sharedPreferences: Get.find()));

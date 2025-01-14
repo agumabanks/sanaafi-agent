@@ -47,7 +47,7 @@
     </queries>
 
     <application
-        android:label="Sanaa Field"
+        android:label="Kamuli Field"
         android:requestLegacyExternalStorage="true"
         android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher">

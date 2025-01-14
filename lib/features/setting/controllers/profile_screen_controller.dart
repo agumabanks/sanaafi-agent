@@ -51,9 +51,6 @@ class ProfileController extends GetxController implements GetxService {
       if (response.statusCode == 200) {
         _userInfo = ProfileModel.fromJson(response.body);
 
-
-
-
         Get.find<AuthController>().setUserData(UserShortDataModel(
           name: '${_userInfo!.fName} ${_userInfo!.lName}',
           phone: userInfo?.phone?.replaceAll('${CustomCountryCodeWidget.getCountryCode(userInfo?.phone)}', ''),

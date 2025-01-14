@@ -52,11 +52,11 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     super.initState();
 
-    // subscription = FGBGEvents.stream.listen((event) {
-    //   if(event == FGBGType.foreground) {
-    //     Get.find<AuthController>().authenticateWithBiometric(true,  null);
-    //   }
-    // });
+    subscription = FGBGEvents.stream.listen((event) {
+      if(event == FGBGType.foreground) {
+        Get.find<AuthController>().authenticateWithBiometric(true,  null);
+      }
+    });
 
     userData = Get.find<AuthController>().getUserData();
     if(widget.phoneNumber != userData?.phone) {

@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "414977059359",
+    "project_id": "sfi-saas",
+    "storage_bucket": "sfi-saas.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:414977059359:android:79b1bc1f6db552bea1c32a",
+        "android_client_info": {
+          "package_name": "com.sfi.field"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBAdYTMpjMf8AmzjcEJ-7UQyb07S3sPN9k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:414977059359:android:4dc46bf803c607f1a1c32a",
+        "android_client_info": {
+          "package_name": "com.sfi.fieldma2"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBAdYTMpjMf8AmzjcEJ-7UQyb07S3sPN9k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:six_cash/features/home/controllers/banner_controller.dart';
 import 'package:six_cash/features/home/controllers/home_controller.dart';
+import 'package:six_cash/features/home/widgets/hello.dart';
 import 'package:six_cash/features/notification/controllers/notification_controller.dart';
 import 'package:six_cash/features/setting/controllers/profile_screen_controller.dart';
 import 'package:six_cash/features/requested_money/controllers/requested_money_controller.dart';
@@ -60,27 +61,33 @@ class _HomeScreenState extends State<HomeScreen> {
     return  GetBuilder<HomeController>(
         builder: (controller) {
           return Scaffold(
-            appBar: const HomeAppBarWidget(),
+            appBar: AppBar(
+              toolbarHeight: 5,
+            ), 
+            // const HomeAppBarWidget(),
             body: ExpandableBottomSheet(
                 enableToggle: true,
                 background: RefreshIndicator(
                   onRefresh: () async => await _loadData(context, true),
                   child: SingleChildScrollView(
+                    
                     physics: const AlwaysScrollableScrollPhysics(),
                     child: GetBuilder<SplashController>(builder: (splashController) {
                       int themeIndex = splashController.configModel!.themeIndex ?? 1;
-                      return Column(children: [
+                      return Column(
+                        children: [
+                          HomeHelloWidget(),
 
-                        themeIndex == 1 ?  const ThemeOneWidget() :
-                        themeIndex == 2 ? const ThemeTwoWidget() :
-                        themeIndex == 3 ? const ThemeThreeWidget() :
+                        // themeIndex == 1 ?  const ThemeOneWidget() :
+                        // themeIndex == 2 ? const ThemeTwoWidget() :
+                        // themeIndex == 3 ? const ThemeThreeWidget() :
                         const ThemeOneWidget(),
 
 
-                        const SizedBox(height: Dimensions.paddingSizeDefault),
+                        // const SizedBox(height: Dimensions.paddingSizeDefault),
 
-                        const LinkedWebsiteWidget(),
-                        const SizedBox(height: 80),
+                        // const LinkedWebsiteWidget(),
+                        // const SizedBox(height: 80),
 
                       ]);
                     }),
@@ -93,6 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
           );
         });
   }
+
 
 }
 

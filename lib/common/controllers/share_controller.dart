@@ -10,7 +10,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:six_cash/common/models/contact_model.dart';
 import 'package:six_cash/helper/route_helper.dart';
 import 'package:get/get.dart';
-// import 'package:gallery_saver/gallery_saver.dart';
+import 'package:gallery_saver/gallery_saver.dart';
 import 'package:six_cash/util/app_constants.dart';
 import 'package:six_cash/helper/custom_snackbar_helper.dart';
 import 'package:six_cash/features/transaction_money/widgets/share_statement_widget.dart';
@@ -49,7 +49,7 @@ class ShareController extends GetxController implements GetxService{
         final directory = await getApplicationDocumentsDirectory();
         final imageFile = File('${directory.path}/qr.png');
         imageFile.writeAsBytesSync(image!);
-        // await GallerySaver.saveImage(imageFile.path,albumName: AppConstants.appName).then((value) => showCustomSnackBarHelper('QR code save to your Gallery',isError: false));
+        await GallerySaver.saveImage(imageFile.path,albumName: AppConstants.appName).then((value) => showCustomSnackBarHelper('QR code save to your Gallery',isError: false));
       }
 
 
